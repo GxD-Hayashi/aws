@@ -30,7 +30,11 @@ optional arguments:
 singularity exec --disable-cache --bind /data1 $img python $SCRIPT <command> --help
 ```
 ## 1\. アップロード
-AWS へアップロードするファイルのシンボリックリンク、それらのリンク先をたどってデータ転送を行うスクリプトファイル upload.\<time-stamp>.sh と 転送元ファイルのチェックサムを記録する checksum.\<time-stamp>.shを作成する。
+以下のファイルを作成する。
+- AWS へアップロードするファイルのシンボリックリンク
+- 上記のリンク先をたどってデータ転送を行うスクリプトファイル upload.\<time-stamp>.sh
+- 転送元ファイルのチェックサムを記録する checksum.\<time-stamp>.sh
+### 実行例
 ```
 singularity exec --disable-cache --bind /data1 $img python $SCRIPT upload --flowcellid <FLOWCELLID> --project_type {WTS,eWES} [--directory DIRECTORY] [--inclusion INCLUSION] [--exclusion EXCLUSION] [--srcdir SRCDIR]
 ```
@@ -43,13 +47,16 @@ singularity exec --disable-cache --bind /data1 $img python $SCRIPT upload --flow
 |--inclusion/-i    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None |
 |--srcdir/-s       |bashファイル等の出力ディレクトリパス |/data1/work/AWS/uploads |
 
-⇒ AWS S3 にデータをアップロードするスクリプト \<srcdir>/upload.\<time-stamp>.sh を作成する。\
-&nbsp;&nbsp;&nbsp; sh \<srcdir>/upload.\<time-stamp>.sh でAWSへアップロードする。\
-⇒ アップロードするファイルのチェックサムを書き出すスクリプト \<srcdir>/checksum.\<time-stamp>.sh を作成する。\
-&nbsp;&nbsp;&nbsp; cd \<srcdir> && qsub checksum.\<time-stamp>.sh でジョブを投入。
+実行後に以下の操作を行い、アップロードを完了する。
+```
+sh <srcdir>/upload.<time-stamp>.sh
+cd <srcdir> && qsub checksum.<time-stamp>.sh
+```
 
 ## 2\. ダウンロード
-AWS からデータ転送を行うスクリプトファイル download.\<time-stamp>.sh を作成する。
+以下のファイルを作成する。
+- AWS からデータ転送を行うスクリプトファイル download.\<time-stamp>.sh
+### 実行例
 ```
 singularity exec --disable-cache --bind /data1 $img python $SCRIPT download --sample SAMPLE [--srcdir SRCDIR]
 ```
@@ -58,7 +65,9 @@ singularity exec --disable-cache --bind /data1 $img python $SCRIPT download --sa
 |--sample/-s |Sample ID。カンマ区切りで複数指定可能 |None |
 |--srcdir/-d |bashファイル等の出力ディレクトリパス  |/data1/work/AWS/downloads |
 
+実行後に以下の操作を行い、ダウンロードを完了する。
+```
+sh download.<time-stamp>.sh
+```
 ⇒ \<srcdir>/info/\<time-stamp>.tsv に AWS S3に格納されている当該検体データの情報を書き出す。\
-⇒ AWS S3 からデータをダウンロードするスクリプト \<srcdir>/download.\<time-stamp>.sh を作成する。\
-&nbsp;&nbsp;&nbsp; sh \<srcdir>/download.\<time-stamp>.sh でダウンロードを実行。\
 &nbsp;&nbsp;&nbsp; *データはアーカイブされており、リストアする必要があるため長時間かかる。
