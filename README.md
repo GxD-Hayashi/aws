@@ -46,6 +46,7 @@ singularity exec --disable-cache --bind /data1 $img python $SCRIPT upload --flow
 |--exclusion/-e    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None |
 |--inclusion/-i    |アップロードするSample IDを指定。カンマ区切りで複数指定可能 |None |
 |--srcdir/-s       |bashファイル等の出力ディレクトリパス |/data1/work/AWS/uploads |
+**--exclusion と --inclusion は同時指定不可** \
 
 実行後に以下の操作を行い、アップロードを完了する。
 ```
