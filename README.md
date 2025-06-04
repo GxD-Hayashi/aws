@@ -3,6 +3,11 @@ AWS (Amazon Web Service) に解析データをアップロード、またはダ�
 計算ノードはawsコマンドがインストールされていないため、作成されたbashスクリプトはqmasterで実行すること。\
 (長時間かかるので、nohupでバックグラウンド実行を推奨)
 
+## バックアップデータ
+### eWES
+
+### WTS
+
 ## 変数の定義(共通)
 ```
 img=/data1/labTools/labTools.sif
