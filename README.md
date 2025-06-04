@@ -43,8 +43,8 @@ singularity exec --disable-cache --bind /data1 $img python $SCRIPT upload --flow
 |--flowcellid/-fc  |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
 |--project_type/-t |解析種別。eWES/WTS          |None              |
 |--directory/-d    |解析フォルダの親ディレクトリ |/data1/data/result |
-|--exclusion/-e    |アップロードするSample IDを指定。カンマ区切りで複数指定可能 |None |
-|--inclusion/-i    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None |
+|--exclusion/-e    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None |
+|--inclusion/-i    |アップロードするSample IDを指定。カンマ区切りで複数指定可能 |None |
 |--srcdir/-s       |bashファイル等の出力ディレクトリパス |/data1/work/AWS/uploads |
 
 実行後に以下の操作を行い、アップロードを完了する。
