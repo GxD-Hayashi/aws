@@ -37,7 +37,7 @@ optional arguments:
 singularity exec --disable-cache --bind /data1 $img python $SCRIPT <command> --help
 ```
 ## 1\. アップロード
-以下のファイルを作成する。
+以下のファイルを\<SRCDIR\>に作成する。
 - AWS へアップロードするファイルのシンボリックリンク
 - 上記のリンク先をたどってデータ転送を行うスクリプトファイル upload.\<time-stamp>.sh
 - 転送元ファイルのチェックサムを記録する checksum.\<time-stamp>.sh
@@ -62,7 +62,7 @@ cd <srcdir> && qsub checksum.<time-stamp>.sh
 ```
 
 ## 2\. ダウンロード
-以下のファイルを作成する。
+以下のファイルを\<SRCDIR\>に作成する。
 - AWS からデータ転送を行うスクリプトファイル download.\<time-stamp>.sh
 ### 実行例
 ```
