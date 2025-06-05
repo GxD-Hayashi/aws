@@ -5,8 +5,10 @@ AWS (Amazon Web Service) に解析データをアップロード、またはダ�
 
 ## バックアップデータ
 ### eWES
+<img src="https://github.com/user-attachments/assets/0aed04d1-e246-47c0-bce6-462e1aae4523" width="1000">
 
 ### WTS
+<img src="https://github.com/user-attachments/assets/0998fdfb-7f01-49b5-8aa2-853da20fc854" width="1000">
 
 ## 変数の定義(共通)
 ```
