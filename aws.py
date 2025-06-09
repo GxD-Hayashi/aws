@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 from pathlib import Path
-from subfunc import *
+from modules import *
 
 VERSION="v3.0.0"
 

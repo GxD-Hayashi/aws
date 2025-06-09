@@ -76,21 +76,22 @@ def check_files(sampleID, prj_type, analDir, linkDir:Path):
         VCF_ZIP = os.path.join(linkDir, sampleID, sampleID + '_mutect2_freebayes_lofreq_vote_res.exome.vcf.gz')
 
         if not os.path.isfile(FQ1) :
-            shutil.rmtree( linkDir / sampleID )
             return FQ1 + ': File does not exist.'
         if not os.path.isfile(FQ2) :
-            shutil.rmtree( linkDir / sampleID )
             return FQ2 + ': File does not exist.'
         if not os.path.isfile(VCF) :
-            shutil.rmtree( linkDir / sampleID )
             return VCF + ': File does not exist.'
 
-        symlink_force(Path(FQ1), linkDir / sampleID / f"{sampleID}.R1.fastq.gz")
-        symlink_force(Path(FQ2), linkDir / sampleID / f"{sampleID}.R2.fastq.gz")
+        flag = symlink_force(Path(FQ1), linkDir / sampleID / f"{sampleID}.R1.fastq.gz")
+        if flag :
+            return f"{sampleID}.R1.fastq.gz: Symbolic link creation failure."
+        flag = symlink_force(Path(FQ2), linkDir / sampleID / f"{sampleID}.R2.fastq.gz")
+        if flag :
+            return f"{sampleID}.R2.fastq.gz: Symbolic link creation failure."
 
         if os.path.isfile(VCF_ZIP) : os.remove(VCF_ZIP)
         with open(VCF, 'rb') as f_in:
-            with gzip.open(linkDir / sampleID / f"{sampleID}_mutect2_freebayes_lofreq_vote_res.exome.vcf.gz", 'wb') as f_out:
+            with gzip.open(VCF_ZIP, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
 
         return 'success'
@@ -99,28 +100,34 @@ def check_files(sampleID, prj_type, analDir, linkDir:Path):
         FQ1 = os.path.realpath( os.path.join(analDir, sampleID, 'Fastq', f"{sampleID}.R1.fastq.gz") )
         FQ2 = os.path.realpath( os.path.join(analDir, sampleID, 'Fastq', f"{sampleID}.R2.fastq.gz") )
         if not os.path.isfile(FQ1) :
-            shutil.rmtree( linkDir / sampleID )
             return FQ1 + ': File does not exist.'
         if not os.path.isfile(FQ2) :
-            shutil.rmtree( linkDir / sampleID )
             return FQ2 + ': File does not exist.'
 
-        symlink_force(FQ1, linkDir / sampleID / f"{sampleID}.R1.fastq.gz")
-        symlink_force(FQ2, linkDir / sampleID / f"{sampleID}.R2.fastq.gz")
+        flag = symlink_force(FQ1, linkDir / sampleID / f"{sampleID}.R1.fastq.gz")
+        if flag :
+            return f"{sampleID}.R1.fastq.gz: Symbolic link creation failure."
+        flag = symlink_force(FQ2, linkDir / sampleID / f"{sampleID}.R2.fastq.gz")
+        if flag :
+            return f"{sampleID}.R2.fastq.gz: Symbolic link creation failure."
+
         return 'success'
 
 def symlink_force(target: Path, link_name):
     try:
         os.symlink(target, link_name)
+        return False
     except OSError as e:
         if e.errno == errno.EEXIST:
             os.remove(link_name)
             os.symlink(target, link_name)
+            return False
         elif e.errno == errno.ENOENT :
             os.makedirs(os.path.dirname(os.path.abspath(link_name)), exist_ok=True)
             os.symlink(target, link_name)
+            return False
         else:
-            raise e
+            return True
 
 def run_upload(args):
 
@@ -176,10 +183,12 @@ def run_upload(args):
             if not link_flag == 'success' :
                 print(link_flag)
                 luck_samples.append(item2['SAMPLE_ID'])
+                shutil.rmtree(outdir / item2['SAMPLE_ID'])
                 continue
 
     if len(luck_samples) > 0 :
         print('Missing file:\n' + '\n'.join(luck_samples))
+        print('Stop creating script files for transfer.')
 
     else :
         out_bash_1 = Path(srcdir) / f"upload.{now_str}.sh"
@@ -189,25 +198,25 @@ def run_upload(args):
         try :
             shutil.copy2(TMPLATE, out_bash_1)
         except FileExistsError as e:
-            shutil.rmtree(srcdir)
+            shutil.rmtree(srcdir / now_str)
             init(f'File does not exist.')
         except PermissionError as e:
-            shutil.rmtree(srcdir)
+            shutil.rmtree(srcdir / now_str)
             init(f'Error due to authorisation.')
         except Exception as e:
-            shutil.rmtree(srcdir)
+            shutil.rmtree(srcdir / now_str)
             init(f'unexpected error:{e}')
 
         try :
             shutil.copy2(TMPLATE2, out_bash_2)
         except FileExistsError as e:
-            shutil.rmtree(srcdir)
+            shutil.rmtree(srcdir / now_str)
             init(f'File does not exist.')
         except PermissionError as e:
-            shutil.rmtree(srcdir)
+            shutil.rmtree(srcdir / now_str)
             init(f'Error due to authorisation.')
         except Exception as e:
-            shutil.rmtree(srcdir)
+            shutil.rmtree(srcdir / now_str)
             init(f'unexpected error:{e}')
 
         with open(out_bash_1, 'a') as f:
