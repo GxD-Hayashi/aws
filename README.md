@@ -39,6 +39,8 @@ singularity exec --disable-cache --bind /data1 $img python $SCRIPT <command> --h
 <img src="https://github.com/user-attachments/assets/0aed04d1-e246-47c0-bce6-462e1aae4523" width="1000">
 **【WTS】**
 <img src="https://github.com/user-attachments/assets/0998fdfb-7f01-49b5-8aa2-853da20fc854" width="1000">
+
+*転送されるデータが1つでも欠けている場合はシンボリックリンクのみ作成し、shファイルを作成せずに終了する。
 ### 実行例
 ```
 singularity exec --disable-cache --bind /data1 $img python $SCRIPT upload --flowcellid <FLOWCELLID> --project_type {WTS,eWES} [--directory DIRECTORY] [--inclusion INCLUSION] [--exclusion EXCLUSION] [--srcdir SRCDIR]
