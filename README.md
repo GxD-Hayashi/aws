@@ -73,15 +73,18 @@ cd <srcdir> && qsub checksum.<timestamp>.sh
 ### 実行例
 ```
 singularity exec --disable-cache --bind /data1 $img python $SCRIPT download --sample SAMPLE [--srcdir SRCDIR]
+singularity exec --disable-cache --bind /data1 $img python $SCRIPT download --listfile LISTFILE [--srcdir SRCDIR]
 ```
-| option     |required| 概要                               | default          |
-|:-----------|:-------|:----------------------------------|:------------------|
-|--sample/-s |True    |Sample ID。カンマ区切りで複数指定可能 |None |
-|--srcdir/-d |False   |bashファイル等の出力ディレクトリパス  |/data1/work/AWS/downloads |
+| option       |required| 概要                               | default           |
+|:-------------|:-------|:-----------------------------------|:------------------|
+|--sample/-s   |False*  |Sample ID。カンマ区切りで複数指定可能 |None               |
+|--listfile/-f |False*  |downloadするSample IDリストのファイルパス。<br>Sample IDを1列に記載する |None |
+|--srcdir/-d   |False   |bashファイル等の出力ディレクトリパス  |/data1/work/AWS/downloads |
 
+***--sample または --listfile のいずれか1つを指定する。**\
 実行後に以下の操作を行い、ダウンロードを完了する。
 ```
 sh download.<timestamp>.sh
 ```
-⇒ \<srcdir>/info/\<timestamp>.tsv に AWS S3に格納されている当該検体データの情報を書き出す。\
+⇒ \<srcdir>/info/\<timestamp>.tsv に AWS S3に格納されている指定した検体データの情報を書き出す。\
 &nbsp;&nbsp;&nbsp; *データはアーカイブされており、リストアする必要があるため長時間かかる。
