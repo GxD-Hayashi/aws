@@ -1,7 +1,6 @@
 # aws
 AWS (Amazon Web Service) に解析データをアップロード、またはダウンロードする。\
-計算ノードはawsコマンドがインストールされていないため、作成されたbashスクリプトはqmasterで実行すること。\
-(長時間かかるので、nohupでバックグラウンド実行を推奨)
+計算ノードはawsコマンドがインストールされていないため、awsアップロード/ダウンロード用bashスクリプトはqmasterで実行すること。(長時間かかるので、nohupでバックグラウンド実行を推奨)
 
 ## 変数の定義(共通)
 ```
@@ -40,7 +39,8 @@ singularity exec --disable-cache --bind /data1 $img python $SCRIPT <command> --h
 **【WTS】**
 <img src="https://github.com/user-attachments/assets/0998fdfb-7f01-49b5-8aa2-853da20fc854" width="1000">
 
-*転送されるデータが1つでも欠けている場合はシンボリックリンクのみ作成し、shファイルを作成せずに終了する。
+*転送されるデータが1つでも欠けている場合は、存在しているデータのシンボリックリンクを作成し、bashファイルを作成せずに終了する。\
+upload.\<timestamp>.sh, checksum.\<timestamp>.sh が作成されなかった場合は足りないシンボリックリンクから欠けているデータを確認して対応すること。
 ### 実行例
 ```
 singularity exec --disable-cache --bind /data1 $img python $SCRIPT upload --flowcellid <FLOWCELLID> --project_type {WTS,eWES} [--directory DIRECTORY] [--inclusion INCLUSION] [--exclusion EXCLUSION] [--srcdir SRCDIR]
