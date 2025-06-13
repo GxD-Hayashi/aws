@@ -92,8 +92,10 @@ def run_download(args):
 
     not_exist = list(set(sampleIDs) - set(df['sample']))
     if len(not_exist) > 0:
-        print('The following samples have not been uploaded to AWS.')
-        print('\n'.join(not_exist))
+        print('The following samples have not been uploaded to AWS.'+ '\n'.join(not_exist))
+        choice = prompt_choice("Continue? (yes[Y]/no[N]):", ['yes', 'y', 'no', 'n'])
+        if choice in ['no', 'n'] :
+            init('Abort process.')
 
     df = df[ df['sample'].isin(sampleIDs) ]
     if df.shape[0] > 0 :
