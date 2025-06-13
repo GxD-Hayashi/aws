@@ -45,14 +45,14 @@ upload.\<timestamp>.sh, checksum.\<timestamp>.sh が作成されなかった場�
 ```
 singularity exec --disable-cache --bind /data1 $img python $SCRIPT upload --flowcellid <FLOWCELLID> --project_type {WTS,eWES} [--directory DIRECTORY] [--inclusion INCLUSION] [--exclusion EXCLUSION] [--srcdir SRCDIR]
 ```
-| option           | 概要                       | default          |
-|:-----------------|:--------------------------|:------------------|
-|--flowcellid/-fc  |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
-|--project_type/-t |解析種別。eWES/WTS          |None              |
-|--directory/-d    |解析フォルダの親ディレクトリ |/data1/data/result |
-|--exclusion/-e    |除外するSample IDを指定。カンマ区切りで複数指定可能 |None |
-|--inclusion/-i    |アップロードするSample IDを指定。カンマ区切りで複数指定可能 |None |
-|--srcdir/-s       |bashファイル等の出力ディレクトリパス |/data1/work/AWS/uploads |
+| option           |required| 概要                       | default          |
+|:-----------------|:-------|:--------------------------|:------------------|
+|--flowcellid/-fc  |True    |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
+|--project_type/-t |True    |解析種別。eWES/WTS          |None              |
+|--directory/-d    |False   |解析フォルダの親ディレクトリ |/data1/data/result |
+|--exclusion/-e    |False   |除外するSample IDを指定。カンマ区切りで複数指定可能 |None |
+|--inclusion/-i    |False   |アップロードするSample IDを指定。カンマ区切りで複数指定可能 |None |
+|--srcdir/-s       |False   |bashファイル等の出力ディレクトリパス |/data1/work/AWS/uploads |
 
 **--exclusion と --inclusion は同時指定不可** \
 実行後に以下の操作を行い、アップロードを完了する。
@@ -74,10 +74,10 @@ cd <srcdir> && qsub checksum.<timestamp>.sh
 ```
 singularity exec --disable-cache --bind /data1 $img python $SCRIPT download --sample SAMPLE [--srcdir SRCDIR]
 ```
-| option     | 概要                               | default          |
-|:-----------|:----------------------------------|:------------------|
-|--sample/-s |Sample ID。カンマ区切りで複数指定可能 |None |
-|--srcdir/-d |bashファイル等の出力ディレクトリパス  |/data1/work/AWS/downloads |
+| option     |required| 概要                               | default          |
+|:-----------|:-------|:----------------------------------|:------------------|
+|--sample/-s |True    |Sample ID。カンマ区切りで複数指定可能 |None |
+|--srcdir/-d |False   |bashファイル等の出力ディレクトリパス  |/data1/work/AWS/downloads |
 
 実行後に以下の操作を行い、ダウンロードを完了する。
 ```
