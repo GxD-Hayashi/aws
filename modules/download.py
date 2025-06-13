@@ -45,8 +45,25 @@ def run_download(args):
     now = datetime.datetime.now()
     now_str = str(now.strftime("%Y%m%d%H%M%S"))
 
-    sampleIDs = [x.strip() for x in args.sample.split(',') if not x.strip() == '']
+    listfile = args.listfile
+    sampleIDs = args.sample
     srcdir = args.srcdir
+
+    if listfile is None :
+        if sampleIDs is None :
+            init('Incorrect argument specified.')
+        else :
+            sampleIDs = [x.strip() for x in sampleIDs.split(',') if not x.strip() == '']
+    elif not os.path.isfile(listfile) :
+        init('List file does not exist.')
+    else :
+        with open(listfile, 'r') as f:
+            try:
+                sampleIDs = f.read().splitlines()
+            except FileNotFoundError as e:
+                init(e)
+
+    sampleIDs = rmdup_list(sampleIDs)
 
     JSON_wts = Path(srcdir) / "info" / f"{now_str}.gxd-wts.json"
     JSON_ewes = Path(srcdir) / "info" / f"{now_str}.gxd-ewes.json"

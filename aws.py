@@ -27,7 +27,8 @@ def main():
 
     # download
     parser_dl = subparsers.add_parser("download", aliases=['dl'], help="Download from AWS.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser_dl.add_argument("--sample","-s", required=True, help="sample ID (comma separated)")
+    parser_dl.add_argument("--sample","-s", required=False, help="sample ID (comma separated)")
+    parser_dl.add_argument("--listfile","-f", required=False, help="List of samples to be download.")
     parser_dl.add_argument("--srcdir","-d", required=False, help="output destination for bash files", default="/data1/work/AWS/downloads")
     parser_dl.set_defaults(func=run_download)
 

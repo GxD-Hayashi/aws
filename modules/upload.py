@@ -141,6 +141,9 @@ def run_upload(args):
     exclusion = [x.strip() for x in args.exclusion.split(',') if not x.strip() == '']
     srcdir = args.srcdir
 
+    inclusion = rmdup_list(inclusion)
+    exclusion = rmdup_list(exclusion)
+
     if len(inclusion) > 0 and len(exclusion) > 0:
         init('ERROR: Inclusion and exclusion cannot be specified simultaneously.')
 
