@@ -48,8 +48,8 @@ upload.\<timestamp>.sh, checksum.\<timestamp>.sh が作成されなかった場�
 | option           |required| 概要                       | default          |
 |:-----------------|:-------|:--------------------------|:------------------|
 |--flowcellid/-fc  |True    |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
-|--project_type/-t |True    |解析種別。eWES/WTS          |None              |
-|--directory/-d    |False   |解析フォルダの親ディレクトリ |/data1/data/result |
+|--project_type/-t |False   |解析種別。both/eWES/WTSから選択 |both            |
+|--directory/-d    |False   |解析フォルダの親ディレクトリ |/data1/data/result  |
 |--exclusion/-e    |False   |除外するSample IDを指定。カンマ区切りで複数指定可能 |None |
 |--inclusion/-i    |False   |アップロードするSample IDを指定。カンマ区切りで複数指定可能 |None |
 |--srcdir/-s       |False   |bashファイル等の出力ディレクトリパス |/data1/work/AWS/uploads |
