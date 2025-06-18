@@ -18,7 +18,7 @@ def main():
     # upload
     parser_ul = subparsers.add_parser("upload", aliases=['up'], help="Upload to AWS.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser_ul.add_argument("--flowcellid","-fc", required=True, help="flowcell id")
-    parser_ul.add_argument("--project_type","-t", required=True, help="project type", default=None, choices=["WTS","eWES"])
+    parser_ul.add_argument("--project_type","-t", required=False, help="project type", default="both", choices=["both","WTS","eWES"])
     parser_ul.add_argument("--directory","-d", required=False, help="parent analytical directory", default="/data1/data/result")
     parser_ul.add_argument("--inclusion","-i", required=False, help="sample IDs to include (comma separated)", default="")
     parser_ul.add_argument("--exclusion","-e", required=False, help="sample IDs to exclude (comma separated)", default="")

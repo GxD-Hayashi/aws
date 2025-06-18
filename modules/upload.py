@@ -147,13 +147,6 @@ def run_upload(args):
     if len(inclusion) > 0 and len(exclusion) > 0:
         init('ERROR: Inclusion and exclusion cannot be specified simultaneously.')
 
-    if project_type == 'WTS' :
-        tr_dir = 'gxd-wts'
-    elif project_type == 'eWES' :
-        tr_dir = 'gxd-ewes'
-    else :
-        init('ERROR: Please select one project_type from eWES and WTS')
-
     df_info = getinfo(flowcellid)
     if df_info.shape[0] == 0 : init("No matching data found.")
 
@@ -168,15 +161,63 @@ def run_upload(args):
         if df_info.shape[0] == 0 : init("No corresponding sample IDs.")
 
     df_info['PRJ_TYPE'] = df_info['PRJ_TYPE'].str.replace('EWES',"eWES")
-    df_info = df_info[ df_info['PRJ_TYPE'] == project_type ]
+    if project_type == "both" :
+        df_info[ df_info['PRJ_TYPE'].isin(['eWES','WTS']) ]
+    else :
+        df_info = df_info[ df_info['PRJ_TYPE']==project_type]
     if df_info.shape[0] == 0 : init("Test type error: no sample ID corresponds.")
 
     uniq_info = fcDir_table(df_info, directory)
     if uniq_info.shape[0] == 0: init("No samples to forward.")
 
     luck_samples = []
+    out_bash_1 = Path(srcdir) / f"upload.{now_str}.sh"
+    out_bash_2 = Path(srcdir) / f"checksum.{now_str}.sh"
+    os.makedirs(srcdir, exist_ok=True)
 
+    try :
+        shutil.copy2(TMPLATE, out_bash_1)
+    except FileExistsError as e:
+        shutil.rmtree(srcdir / now_str)
+        init(f'File does not exist.')
+    except PermissionError as e:
+        shutil.rmtree(srcdir / now_str)
+        init(f'Error due to authorisation.')
+    except Exception as e:
+        shutil.rmtree(srcdir / now_str)
+        init(f'unexpected error:{e}')
+
+    try :
+        shutil.copy2(TMPLATE2, out_bash_2)
+    except FileExistsError as e:
+        shutil.rmtree(srcdir / now_str)
+        init(f'File does not exist.')
+    except PermissionError as e:
+        shutil.rmtree(srcdir / now_str)
+        init(f'Error due to authorisation.')
+    except Exception as e:
+        shutil.rmtree(srcdir / now_str)
+        init(f'unexpected error:{e}')
+
+    with open(out_bash_1, 'a') as f:
+        print('timestamp=' + now_str, file=f)
+        print('TMPDIR='+ srcdir, file=f)
+        print('INFOFILE=' + srcdir + '/checksum/' + now_str + '.txt' + '\n', file=f)
+
+    with open(out_bash_2, 'a') as f:
+        print('timestamp=' + now_str, file=f)
+        print('TMPDIR='+ srcdir, file=f)
+        print('INFOFILE=' + srcdir + '/checksum/' + now_str + '.txt' + '\n', file=f)
+     
     for i, item1 in uniq_info.iterrows() :
+
+        if item1['PRJ_TYPE'] == 'WTS' :
+            tr_dir = 'gxd-wts'
+        elif item1['PRJ_TYPE'] == 'eWES' :
+            tr_dir = 'gxd-ewes'
+        else :
+            continue
+
         outdir = Path(os.path.abspath(srcdir)) / now_str / tr_dir / os.path.basename(item1['seqDir'])
         temp_info = df_info[ (df_info['sub_name']==item1['sub_name']) & (df_info['PRJ_TYPE']==item1['PRJ_TYPE']) ].reset_index(drop=True)
 
@@ -189,52 +230,20 @@ def run_upload(args):
                 shutil.rmtree(outdir / item2['SAMPLE_ID'])
                 continue
 
-    if len(luck_samples) > 0 :
-        print('Missing file:\n' + '\n'.join(luck_samples))
-        print('Stop creating script files for transfer.')
-
-    else :
-        out_bash_1 = Path(srcdir) / f"upload.{now_str}.sh"
-        out_bash_2 = Path(srcdir) / f"checksum.{now_str}.sh"
-        os.makedirs(srcdir, exist_ok=True)
-
-        try :
-            shutil.copy2(TMPLATE, out_bash_1)
-        except FileExistsError as e:
-            shutil.rmtree(srcdir / now_str)
-            init(f'File does not exist.')
-        except PermissionError as e:
-            shutil.rmtree(srcdir / now_str)
-            init(f'Error due to authorisation.')
-        except Exception as e:
-            shutil.rmtree(srcdir / now_str)
-            init(f'unexpected error:{e}')
-
-        try :
-            shutil.copy2(TMPLATE2, out_bash_2)
-        except FileExistsError as e:
-            shutil.rmtree(srcdir / now_str)
-            init(f'File does not exist.')
-        except PermissionError as e:
-            shutil.rmtree(srcdir / now_str)
-            init(f'Error due to authorisation.')
-        except Exception as e:
-            shutil.rmtree(srcdir / now_str)
-            init(f'unexpected error:{e}')
-
         with open(out_bash_1, 'a') as f:
-            print('timestamp=' + now_str, file=f)
+            print('FOLDER=' + ','.join( set([os.path.basename(a) for a in uniq_info[uniq_info['PRJ_TYPE']==item1['PRJ_TYPE']]['seqDir']]) ), file=f)
             print('tr_dir=' + tr_dir, file=f)
-            print('TMPDIR='+ srcdir, file=f)
-            print('FOLDER=' + ','.join( set([os.path.basename(a) for a in uniq_info['seqDir']]) ), file=f)
-            print('INFOFILE=' + srcdir + '/checksum/' + now_str + '.txt', file=f)
-            print('JSONFILE=' + srcdir + '/info/' + now_str + '.json', file=f)
-            print("data_upload\nget_info", file=f)
+            print('JSONFILE=' + srcdir + '/info/' + now_str + '.' + item1['PRJ_TYPE'] + '.json', file=f)
+            print("data_upload\nget_info\n", file=f)
 
         with open(out_bash_2, 'a') as f:
-            print('timestamp=' + now_str, file=f)
+            print('FOLDER=' + ','.join( set([os.path.basename(a) for a in uniq_info[uniq_info['PRJ_TYPE']==item1['PRJ_TYPE']]['seqDir']]) ), file=f)
             print('tr_dir=' + tr_dir, file=f)
-            print('TMPDIR='+ str(srcdir), file=f)
-            print('FOLDER=' + ','.join( set([os.path.basename(a) for a in uniq_info['seqDir']]) ), file=f)
-            print('INFOFILE=' + srcdir + '/checksum/' + now_str + '.txt', file=f)
-            print("get_checksum", file=f)
+            print("get_checksum\n" , file=f)
+
+    if len(luck_samples) > 0 :
+        print('Missing file:\n' + '\n'.join(luck_samples))
+        os.remove(out_bash_1)
+        os.remove(out_bash_2)
+        init('Stop creating script files for transfer.')
+
