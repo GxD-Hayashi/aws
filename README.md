@@ -30,8 +30,8 @@ aws_tools <command> --help
 ```
 ## 1\. アップロード
 ```
-aws_tools upload --flowcellid <flowcellid> --project_type [eWES/WTS]
-aws_tools up -fc <flowcellid> -t [eWES/WTS]
+aws_tools upload --flowcellid <flowcellid>
+aws_tools up -fc <flowcellid>
 ```
 ⇒ 以下のファイルが\<SRCDIR\>に作成される。
 - AWS へアップロードするファイルのシンボリックリンク
