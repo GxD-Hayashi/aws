@@ -1,9 +1,12 @@
 # aws
 AWS (Amazon Web Service) に解析データをアップロード、またはダウンロードする。\
-指定されたsample IDやflowcell IDから検体情報をデータベースに問合せ、CAPサーバ内のファイルを検索して転送するため、データベースに登録がない検体や、規程の場所にファイルがない検体に対しては実行できません。また、計算ノードはawsコマンドがインストールされていないため、awsアップロード/ダウンロード用bashスクリプトはqmasterで実行すること。(長時間かかるので、nohupでバックグラウンド実行を推奨)
+指定されたsample IDやflowcell IDから検体情報をデータベースに問合せ、CAPサーバ内のファイルを検索して転送するため、データベースに登録がない検体や、規程の場所にファイルがない検体に対しては実行できません。\
+また、計算ノードはawsコマンドがインストールされていないため、awsアップロード/ダウンロード用bashスクリプトはqmasterで実行すること。(長時間かかるので、nohupでバックグラウンド実行を推奨)
 
 ## エイリアスの作成 ※ 初回のみ
-~/bin フォルダ直下に以下のコマンドを記載したテキストファイル aws_tools を作成し、実行権限を付与する。（awsコマンドが既にあるので、エイリアスはaws_toolsとする） エイリアスを作成しない場合は、singularity でコンテナとスクリプトファイルを指定して実行する。 （gxd_pipeline, guest_user ユーザーには実装済み）
+~/bin フォルダ直下に以下のコマンドを記載したテキストファイル aws_tools を作成し、実行権限を付与する。※ awsコマンドが既にあるので、エイリアス名はaws_toolsとする \
+（gxd_pipeline, guest_user ユーザーには実装済み）\
+エイリアスを作成しない場合は、singularity でコンテナとスクリプトファイルを指定して実行する。 
 ```
 singularity exec --disable-cache --bind /data1 /data1/labTools/labTools.sif python /data1/labTools/aws/latest/aws.py $@
 ```
@@ -84,7 +87,7 @@ aws_tools dl -f <sample IDs listfile path>
 |--listfile/-f |False*  |downloadするSample IDリストのファイルパス。<br>Sample IDを1列に記載する |None |
 |--srcdir/-d   |False   |bashファイル等の出力ディレクトリパス  |/data1/work/AWS/downloads |
 
-**※ --sample または --listfile のいずれか1つを指定する。**\
+**※ --sample または --listfile のいずれか1つを指定する。** 検査種別は混合していても問題ありません。\
 実行後に以下の操作を行い、ダウンロードを完了する。
 ```
 sh download.<timestamp>.sh
