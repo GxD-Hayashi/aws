@@ -11,8 +11,11 @@ function data_upload() {
 
 function get_info() {
     echo -ne "" > $JSONFILE
-    for f in `echo $FOLDER | sed -e "s/,/ /g"`; do
-        aws s3api list-objects-v2 --bucket $tr_dir --prefix $f/ >> $JSONFILE
+    for sub in `echo $FOLDER | sed -e "s/,/ /g"`; do
+        cd $TMPDIR/$timestamp/$tr_dir/$sub
+        for dir in `find  -mindepth 1 -maxdepth 1 -type d`; do
+            aws s3api list-objects-v2 --bucket $tr_dir --prefix $sub/${dir/\.\//}/ >> $JSONFILE
+        done
     done
 }
 
