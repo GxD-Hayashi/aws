@@ -235,7 +235,7 @@ def run_upload(args):
             print('FOLDER=' + ','.join( set([os.path.basename(a) for a in uniq_info[uniq_info['PRJ_TYPE']==item1['PRJ_TYPE']]['seqDir']]) ), file=f)
             print('tr_dir=' + tr_dir, file=f)
             print('JSONFILE=' + srcdir + '/info/' + now_str + '.' + item1['PRJ_TYPE'] + '.json', file=f)
-            print('ERRORFILE=' + srcdir + now_str + '.' + item1['PRJ_TYPE'] + '.error', file=f)
+            print('ERRORFILE=' + srcdir + '/' + now_str + '.' + item1['PRJ_TYPE'] + '.error', file=f)
             print("data_upload\nget_info\ncheck_size\n", file=f)
 
     if len(luck_samples) > 0 :
