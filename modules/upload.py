@@ -151,12 +151,15 @@ def run_upload(args):
     if df_info.shape[0] == 0 : init("No matching data found.")
 
     if len(inclusion) > 0:
-        print ("inclusion sample:" + "\n".join(inclusion))
+        print ("inclusion sample: " + ",".join(inclusion))
         df_info = df_info[ df_info['SAMPLE_ID'].isin(inclusion)]
+        mismatch = set(inclusion) - set(df_info['SAMPLE_ID'])
+        if len(mismatch) > 0 :
+            print('No entries in database: [' + ','.join(mismatch) + ']')
         if df_info.shape[0] == 0 : init("No corresponding sample IDs.")
 
     if len(exclusion) > 0:
-        print ("exclusion sample:" + "\n".join(exclusion))
+        print ("exclusion sample: " + ",".join(exclusion))
         df_info = df_info[ ~df_info['SAMPLE_ID'].isin(exclusion)]
         if df_info.shape[0] == 0 : init("No corresponding sample IDs.")
 
