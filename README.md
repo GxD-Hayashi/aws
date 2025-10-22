@@ -47,8 +47,9 @@ aws_tools up -fc <flowcellid>
 **【WTS】**
 <img src="https://github.com/user-attachments/assets/0998fdfb-7f01-49b5-8aa2-853da20fc854" width="1000">
 
-※ 転送されるデータが1つでも欠けている場合は、存在しているデータのシンボリックリンクを作成し、bashファイルを作成せずに終了する。\
-upload.\<timestamp>.sh, checksum.\<timestamp>.sh が作成されなかった場合は、足りないシンボリックリンクから欠けているデータを確認して対応する。
+※ 解析ステータスが 102 でない検体は除外される。\
+※ 転送されるデータが1つでも欠けている場合はbashファイルを作成せずに終了する。（存在するデータのシンボリックリンクのみ作成する）\
+⇒ upload.\<timestamp>.sh, checksum.\<timestamp>.sh が作成されなかった場合はシンボリックリンクを参照し、除外された検体を確認して対応する。
 | option           |required| 概要                       | default          |
 |:-----------------|:-------|:--------------------------|:------------------|
 |--flowcellid/-fc  |True    |バッチ固有のID。OncoStationに掲載されている9桁の半角英数字 |None |
