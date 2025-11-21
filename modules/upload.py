@@ -170,10 +170,15 @@ def run_upload(args):
         df_info = df_info[ ~df_info['SAMPLE_ID'].isin(exclusion)]
         if df_info.shape[0] == 0 : init("No corresponding sample IDs.")
 
-    working = df_info[ df_info['ANAL_STATUS'] != '102' ]
-    if working.shape[0] > 0 :
-        print('Analysis in progress: [' +  ','.join(working['SAMPLE_ID'] + ']'))
-        df_info = df_info[ df_info['ANAL_STATUS'] == '102' ]
+    waiting = df_info[ df_info['ANAL_STATUS'] == '100' ]
+    if waiting.shape[0] > 0 :
+        print('Awaiting analysis: [' +  ','.join(waiting['SAMPLE_ID']) + ']')
+        df_info = df_info[ df_info['ANAL_STATUS'] != '100' ]
+
+#    working = df_info[ df_info['ANAL_STATUS'] != '102' ]
+#    if working.shape[0] > 0 :
+#        print('Analysis in progress: [' +  ','.join(working['SAMPLE_ID']) + ']')
+#        df_info = df_info[ df_info['ANAL_STATUS'] == '102' ]
 
     uniq_info = fcDir_table(df_info, directory)
     if uniq_info.shape[0] == 0: init("No samples to forward.")
