@@ -6,7 +6,7 @@
 #$ -l qname=all.q
 
 function data_upload() {
-    aws s3 sync $TMPDIR/$timestamp/$tr_dir s3://$tr_dir/ --storage-class DEEP_ARCHIVE --exact-timestamps
+    aws s3 sync $TMPDIR/$timestamp/$tr_dir s3://$tr_dir/ --storage-class DEEP_ARCHIVE --exact-timestamps --no-progress
 }
 
 function get_info() {
