@@ -6,8 +6,13 @@ AWS (Amazon Web Service) に解析データをアップロード、またはダ�
 計算ノードはawsコマンドがインストールされていないため、awsアップロード/ダウンロード時の **bashスクリプトはqmasterで実行してください**。(長時間かかるので、nohupでバックグラウンド実行を推奨)
 
 ## エイリアスの作成 ※ 初回のみ
-~/bin フォルダ直下に以下のコマンドを記載したテキストファイル aws_tools を作成し、実行権限を付与する。※ awsコマンドが既にあるので、エイリアス名はaws_toolsとする \
-（gxd_pipeline, guest_user ユーザーには実装済み）\
+**gxd_pipeline, guest_user ユーザーには実装済みですので、実行しなくて良いです。**\
+~/bin フォルダ直下に以下のコマンドを記載したテキストファイル aws_tools を作成し、実行権限を付与する。※ awsコマンドが既にあるので、エイリアス名はaws_toolsで作成する。 
+<details>
+  <summary>
+    More Details
+  </summary>
+
 エイリアスを作成しない場合は、singularity でコンテナとスクリプトファイルを指定して実行する。 
 ```
 singularity exec --disable-cache --bind /data1 /data1/labTools/labTools.sif python /data1/labTools/aws/latest/aws.py $@
@@ -33,6 +38,9 @@ optional arguments:
 ```
 aws_tools <command> --help
 ```
+
+</details>
+
 ## 1\. アップロード
 ```
 aws_tools upload --flowcellid <flowcellid>
