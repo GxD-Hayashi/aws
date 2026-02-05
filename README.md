@@ -72,8 +72,14 @@ aws_tools up -fc <flowcellid>
 実行後に以下の操作を行い、アップロードを完了する。
 ```
 sh <srcdir>/upload.<timestamp>.sh
+nohup sh <srcdir>/upload.<timestamp>.sh &  #nohupでバックグラウンド実行時
 cd <srcdir> && qsub checksum.<timestamp>.sh
 ```
+正常にアップロードが完了すると、**/data1/work/AWS/uploads/info/<timestamp>.[eWES/WTS].json** が作成されます。\
+upload.\<timestamp\>.sh が動いていないのに上記ファイルが作成されていない場合は、通信環境に問題がないか確認し、再実行してください。\
+正常に転送されたファイルについては再試行されないため、初回より早く終わります。\
+再度実行してもjsonファイルが作成されない場合はスクリプトの不具合の可能性があります。\
+正常にチェックサムが終了すると、**/data1/work/AWS/uploads/checksum/<timestamp>.txt** にすべての転送元のファイルのチェックサムが作成されます。
 
 ## 2\. ダウンロード
 ```
